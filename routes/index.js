@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const userRoute = require('./authServiceRoute.js')
+const authServiceRoute = require('./authServiceRoute.js')
 
-router.use('/auth',userRoute)
+router.use('/auth',authServiceRoute)
 
 module.exports = router

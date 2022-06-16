@@ -1,4 +1,5 @@
 const axios = require('axios')
+const { errorHandler } = require('../helpers/errorHandler')
 
 class AuthServiceController{
     static async afterLogin(req,res,next){
@@ -19,7 +20,7 @@ class AuthServiceController{
             })
             res.status(200).json(data)
         } catch (error) {
-            next(error)
+            res.status(errorHandler(error).code).json({message:errorHandler(error).message})
         }
     }
 }
