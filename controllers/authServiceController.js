@@ -14,11 +14,12 @@ class AuthServiceController {
             }
             const url = process.env.AUTHSERVICESURL + 'after-login'
             const isRemember = req.body.isRemember ? true : false // isRemember body to hit the microservice
-            const {data} = await axios.post(url, { }, {
+            const { data } = await axios.post(url, {}, {
                 headers: {
                     authorization: req.headers.authorization
                 }
             })
+            // cookies setting for response to frontend
             // Todo: make domain to env
             res.cookie("smartkmsystemAuth", "Bearer " + data.data.token, {
                 domain: ".kmplus.co.id",
@@ -33,6 +34,24 @@ class AuthServiceController {
                 secure: false,
                 expires: expiryDateCounter(isRemember),
             });
+            res.status(200).json(data)
+        } catch (error) {
+            const { code, message } = errorHandler(error)
+            res.status(code).json(message)
+        }
+    }
+
+    static async resetPassword(req, res, next) {
+        try {
+            if (!req.body.email) {
+                throw ({
+                    type: "known",
+                    code: 400,
+                    message: "Email or array of email is required"
+                })
+            }
+            const url = process.env.AUTHSERVICESURL + 'reset-password'
+            const { data } = await axios.post(url, { email: req.body.email })
             res.status(200).json(data)
         } catch (error) {
             res.status(errorHandler(error).code).json({ message: errorHandler(error).message })
