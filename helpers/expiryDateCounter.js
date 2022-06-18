@@ -1,4 +1,4 @@
-// remember me is boolean param that will determine the expiry date
+// remember me is boolean param function that will determine the expiry date
 const expiryDateCounter = (rememberMe) =>{
     const date = rememberMe
       ? new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000)

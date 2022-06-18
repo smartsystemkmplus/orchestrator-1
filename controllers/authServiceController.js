@@ -3,7 +3,7 @@ const { errorHandler } = require('../helpers/errorHandler')
 const { expiryDateCounter } = require('../helpers/expiryDateCounter')
 
 class AuthServiceController {
-    static async afterLogin(req, res, next) {
+    static async afterLogin(req, res) {
         try {
             if (!req.headers.authorization) {
                 throw ({
@@ -41,7 +41,7 @@ class AuthServiceController {
         }
     }
 
-    static async resetPassword(req, res, next) {
+    static async resetPassword(req, res) {
         try {
             if (!req.body.email) {
                 throw ({
@@ -59,13 +59,12 @@ class AuthServiceController {
         }
     }
 
-    static async status(req,res,next){
+    static async status(req,res){
         try {
-            // if the is cookies will set the headers to Cookie : received cookie
-            // otherwise set the headers to {}
-            const headers = req.cookies.__session ? {Cookie : req.cookies.__session} : {}
             const url = process.env.AUTHSERVICESURL + 'status'
-            const {data} = await axios.get(url,{headers})
+            const {data} = await axios.get(url,{
+                headers : req.headers
+            })
             res.status(200).json(data)
         } catch (error) {
             const { code, message } = errorHandler(error)
