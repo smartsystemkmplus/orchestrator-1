@@ -37,7 +37,7 @@ class AuthServiceController {
             res.status(200).json(data)
         } catch (error) {
             const { code, message } = errorHandler(error)
-            res.status(code).json(message)
+            res.status(code).json({message:message})
         }
     }
 
@@ -54,7 +54,22 @@ class AuthServiceController {
             const { data } = await axios.post(url, { email: req.body.email })
             res.status(200).json(data)
         } catch (error) {
-            res.status(errorHandler(error).code).json({ message: errorHandler(error).message })
+            const { code, message } = errorHandler(error)
+            res.status(code).json({message:message})
+        }
+    }
+
+    static async status(req,res,next){
+        try {
+            // if the is cookies will set the headers to Cookie : received cookie
+            // otherwise set the headers to {}
+            const headers = req.cookies.__session ? {Cookie : req.cookies.__session} : {}
+            const url = process.env.AUTHSERVICESURL + 'status'
+            const {data} = await axios.get(url,{headers})
+            res.status(200).json(data)
+        } catch (error) {
+            const { code, message } = errorHandler(error)
+            res.status(code).json({message:message})
         }
     }
 }
